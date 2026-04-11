@@ -27,8 +27,8 @@ var runDetailedCmd = &cobra.Command{
         scenarioName := args[0]
         target := args[1]
 
-        // 获取输出格式
-        output, _ := cmd.Flags().GetString("output")
+        // 输出格式（预留）
+        _, _ = cmd.Flags().GetString("output")
 
         // 创建引擎
         eng := engine.NewEngine()

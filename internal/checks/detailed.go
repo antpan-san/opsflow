@@ -3,6 +3,7 @@ package checks
 import (
     "net"
     "strings"
+    "time"
 
     "github.com/yourusername/opsflow/internal/types"
 )
@@ -39,8 +40,7 @@ func (d *DNSDetailedCheck) Run(input types.Input) types.Result {
         }
     }
 
-    // 获取 DNS 记录类型
-    var recordTypes []string
+    // 获取 IPv4 和 IPv6 地址
     var ipv4Addresses []string
     var ipv6Addresses []string
 
