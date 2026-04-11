@@ -10,7 +10,7 @@ func WebScenario() types.Scenario {
     return types.Scenario{
         Name:        "web",
         Input:       "domain",
-        Checks:      []string{"network", "internet", "dns", "tcp", "http_protocol"},
+        Checks:      []string{"network", "internet", "dns", "tcp", "http_protocol", "timing"},
         Description: "Web服务诊断场景",
         Rules: []types.Rule{
             {
@@ -67,4 +67,5 @@ func RegisterWebScenario(engine interface {
     engine.RegisterCheck(checks.NewDNSCheck())        // DNS检测
     engine.RegisterCheck(checks.NewTCPCheck())        // TCP检测
     engine.RegisterCheck(checks.NewHTTPProtocolCheck()) // 新增：HTTP协议检测
+    engine.RegisterCheck(checks.NewTimingCheck())     // 新增：时延检测
 }

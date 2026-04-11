@@ -114,6 +114,33 @@ func (e *Engine) FormatOutputDetailed(ctx *types.Context) string {
         output.WriteString("\n")
     }
 
+    // 时延信息
+    if timingResult, exists := ctx.Results["timing"]; exists && timingResult.Success {
+        output.WriteString("[时延信息]\n")
+        
+        if dnsTime, ok := timingResult.Data["dns_lookup"].(string); ok {
+            output.WriteString(fmt.Sprintf("  DNS解析: %s\n", dnsTime))
+        }
+        
+        if tcpTime, ok := timingResult.Data["tcp_connect"].(string); ok {
+            output.WriteString(fmt.Sprintf("  TCP连接: %s\n", tcpTime))
+        }
+        
+        if firstByte, ok := timingResult.Data["first_byte"].(string); ok {
+            output.WriteString(fmt.Sprintf("  首字节: %s\n", firstByte))
+        }
+        
+        if serverConnect, ok := timingResult.Data["server_connect"].(string); ok {
+            output.WriteString(fmt.Sprintf("  服务连接: %s\n", serverConnect))
+        }
+        
+        if totalTime, ok := timingResult.Data["total"].(string); ok {
+            output.WriteString(fmt.Sprintf("  总时长: %s\n", totalTime))
+        }
+        
+        output.WriteString("\n")
+    }
+
     // 诊断结论
     if ruleResult, exists := ctx.Results["rule"]; exists {
         output.WriteString("[诊断结论]\n")

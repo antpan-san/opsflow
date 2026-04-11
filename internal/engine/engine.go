@@ -85,6 +85,10 @@ func (e *Engine) FormatOutput(ctx *types.Context, format string) string {
     case "json":
         return e.formatJSON(ctx)
     default:
+        // 检查是否有时延检测结果
+        if _, exists := ctx.Results["timing"]; exists {
+            return e.FormatOutputTiming(ctx)
+        }
         return e.formatText(ctx)
     }
 }

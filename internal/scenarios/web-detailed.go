@@ -10,7 +10,7 @@ func WebDetailedScenario() types.Scenario {
     return types.Scenario{
         Name:        "web-detailed",
         Input:       "domain",
-        Checks:      []string{"network_detailed", "internal_network", "dns_detailed", "tcp", "http_protocol"},
+        Checks:      []string{"network_detailed", "internal_network", "dns_detailed", "tcp", "http_protocol", "timing"},
         Description: "Web服务详细诊断场景",
         Rules: []types.Rule{
             {
@@ -67,4 +67,5 @@ func RegisterWebDetailedScenario(engine interface {
     engine.RegisterCheck(checks.NewDNSDetailedCheck())      // 详细DNS检测
     engine.RegisterCheck(checks.NewTCPCheck())              // TCP检测
     engine.RegisterCheck(checks.NewHTTPProtocolCheck())     // HTTP协议检测
+    engine.RegisterCheck(checks.NewTimingCheck())           // 时延检测
 }
