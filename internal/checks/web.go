@@ -111,4 +111,4 @@ func (h *HTTPCheck) Run(input types.Input) types.Result {
     // 调用新的 HTTPProtocolCheck
     protocolCheck := NewHTTPProtocolCheck()
     return protocolCheck.Run(input)
-}
+}// Test code change
