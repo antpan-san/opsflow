@@ -49,12 +49,16 @@ func (e *Engine) evaluateCondition(condition string, results map[string]types.Re
     // 替换条件中的检查结果
     expr := condition
     for name, result := range results {
-        placeholder := name + "_ok"
-        value := "false"
+        okPlaceholder := name + "_ok"
+        failPlaceholder := name + "_fail"
+        
         if result.Success {
-            value = "true"
+            expr = strings.ReplaceAll(expr, okPlaceholder, "true")
+            expr = strings.ReplaceAll(expr, failPlaceholder, "false")
+        } else {
+            expr = strings.ReplaceAll(expr, okPlaceholder, "false")
+            expr = strings.ReplaceAll(expr, failPlaceholder, "true")
         }
-        expr = strings.ReplaceAll(expr, placeholder, value)
     }
 
     // 简单的逻辑表达式求值
@@ -91,7 +95,8 @@ func (e *Engine) evaluateLogicalExpression(expr string) bool {
 
 // evaluateSimpleExpression 简单表达式求值
 func (e *Engine) evaluateSimpleExpression(expr string) bool {
-    return expr == "true"
+    expr = strings.TrimSpace(expr)
+    return expr == "true" || expr == "True" || expr == "TRUE"
 }
 
 // sortRules 按优先级排序规则

@@ -2,7 +2,6 @@ package checks
 
 import (
     "net"
-    "net/http"
     "time"
 
     "github.com/yourusername/opsflow/internal/types"
@@ -93,7 +92,7 @@ func (t *TCPCheck) Run(input types.Input) types.Result {
     }
 }
 
-// HTTPCheck HTTP检测
+// HTTPCheck HTTP检测（使用新的 HTTPProtocolCheck）
 type HTTPCheck struct {
     BaseCheck
 }
@@ -109,38 +108,7 @@ func (h *HTTPCheck) Name() string {
 }
 
 func (h *HTTPCheck) Run(input types.Input) types.Result {
-    domain := input.Target
-    protocol := input.Params["protocol"]
-    if protocol == "" {
-        protocol = "http"
-    }
-
-    url := protocol + "://" + domain
-    
-    // 发送HTTP请求
-    client := &http.Client{
-        Timeout: 10 * time.Second,
-    }
-    
-    resp, err := client.Get(url)
-    if err != nil {
-        return types.Result{
-            Name:    "http",
-            Success: false,
-            Message: "HTTP请求失败: " + err.Error(),
-            Data:    map[string]interface{}{"url": url},
-        }
-    }
-    defer resp.Body.Close()
-
-    return types.Result{
-        Name:    "http",
-        Success: true,
-        Message: "HTTP请求成功",
-        Data: map[string]interface{}{
-            "url":        url,
-            "status_code": resp.StatusCode,
-            "status":     resp.Status,
-        },
-    }
+    // 调用新的 HTTPProtocolCheck
+    protocolCheck := NewHTTPProtocolCheck()
+    return protocolCheck.Run(input)
 }
