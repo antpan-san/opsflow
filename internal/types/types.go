@@ -1,5 +1,7 @@
 package types
 
+import "time"
+
 // Input 定义检测输入参数
 type Input struct {
     Target string            // 检测目标（如域名、IP、Pod名称）
@@ -44,4 +46,5 @@ type Context struct {
     Results  map[string]Result
     Scenario *Scenario
     Output   string // 输出格式（text/json）
+    Duration time.Duration // 执行耗时
 }

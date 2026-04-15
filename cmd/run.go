@@ -3,6 +3,7 @@ package cmd
 import (
     "fmt"
     "os"
+    "time"
 
     "github.com/spf13/cobra"
     "github.com/yourusername/opsflow/internal/engine"
@@ -24,11 +25,13 @@ var runCmd = &cobra.Command{
   ops run web example.com --port 443 --protocol https`,
     Args: cobra.MinimumNArgs(2),
     Run: func(cmd *cobra.Command, args []string) {
+        startTime := time.Now()
         scenarioName := args[0]
         target := args[1]
 
         // 获取输出格式
         output, _ := cmd.Flags().GetString("output")
+        colorOutput, _ := cmd.Flags().GetBool("color")
 
         // 创建引擎
         eng := engine.NewEngine()
@@ -61,8 +64,19 @@ var runCmd = &cobra.Command{
             os.Exit(1)
         }
 
+        // 计算耗时
+        duration := time.Since(startTime)
+        ctx.Duration = duration
+
         // 输出结果
-        result := eng.FormatOutput(ctx, output)
+        var result string
+        if output == "json" {
+            result = eng.FormatOutputJSON(ctx)
+        } else if colorOutput {
+            result = eng.FormatOutputColor(ctx)
+        } else {
+            result = eng.FormatOutput(ctx, output)
+        }
         fmt.Println(result)
 
         // 如果诊断发现异常，退出码为1
@@ -82,4 +96,6 @@ func init() {
     // 添加标志
     runCmd.Flags().StringP("port", "p", "", "指定端口（默认80）")
     runCmd.Flags().StringP("protocol", "P", "", "指定协议（http/https）")
+    runCmd.Flags().StringP("output", "o", "text", "输出格式 (text|json)")
+    runCmd.Flags().BoolP("color", "c", false, "启用彩色输出")
 }
